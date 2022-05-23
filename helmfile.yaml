@@ -15,10 +15,15 @@ releases:
     namespace: external-secrets
     createNamespace: true
     wait: true
-  - name: externalsecrets
+    hooks:
+      - events: ["cleanup"]
+        showlogs: true
+        command: "kubectl"
+        args: ["wait", "--for", "condition=established", "--timeout=60s", "crd/externalsecrets.external-secrets.io"]
+  - name: secrets
     chart: ./secrets/externalsecrets/
     values:
-      - namespace: externalsecrets
+      - namespace: external-secrets
         aws_region: us-east-1
         aws_access_key: {{ requiredEnv "AWS_ACCESS_KEY" }}
         aws_secret_key: {{ requiredEnv "AWS_SECRET_KEY" }}
@@ -48,16 +53,11 @@ releases:
             host: mysql.db
             name: grafana
         envValueFrom:
-          - name: GF_DATABASE_USER
-            valueFrom:
-              secretKeyRef:
-                name: mysql-secret
-                key: app-username
-          - name: GF_DATABASE_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mysql-secret
-                key: mysql-password
-
-            
-          
+          GF_DATABASE_USER:
+            secretKeyRef:
+              name: mysql-secret
+              key: app-username
+          GF_DATABASE_PASSWORD:
+            secretKeyRef:
+              name: mysql-secret
+              key: mysql-password
