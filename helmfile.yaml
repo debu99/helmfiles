@@ -22,6 +22,7 @@ releases:
         args: ["wait", "--for", "condition=established", "--timeout=60s", "crd/externalsecrets.external-secrets.io"]
   - name: secrets
     chart: ./secrets/externalsecrets/
+    namespace: external-secrets
     values:
       - namespace: external-secrets
         aws_region: us-east-1
