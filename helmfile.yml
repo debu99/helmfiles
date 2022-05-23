@@ -1,0 +1,63 @@
+repositories:
+  - name: stable
+    url: https://charts.helm.sh/stable
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+releases:
+  - name: external-secrets
+    chart: external-secrets/external-secrets
+    version: 0.5.3
+    namespace: external-secrets
+    createNamespace: true
+    wait: true
+  - name: externalsecrets
+    chart: ./secrets/externalsecrets/
+    values:
+      - namespace: externalsecrets
+        aws_region: us-east-1
+        aws_access_key: {{ requiredEnv "AWS_ACCESS_KEY" }}
+        aws_secret_key: {{ requiredEnv "AWS_SECRET_KEY" }}
+    wait: true
+  - name: mysql
+    chart: bitnami/mysql
+    version: 9.0.4
+    namespace: db
+    createNamespace: true
+    values:
+      - auth:
+          username: "app_user"
+          existingSecret: mysql-secret
+  - name: grafana
+    chart: grafana/grafana
+    version: 6.29.4
+    namespace: monitoring
+    createNamespace: true
+    values:
+      - admin:
+          existingSecret: "grafana-secret"
+          userKey: "admin_username"
+          passwordKey: "admin_password"
+        grafana.ini:
+          database:
+            type: mysql
+            host: mysql.db
+            name: grafana
+        envValueFrom:
+          - name: GF_DATABASE_USER
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: app-username
+          - name: GF_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: mysql-password
+
+            
+          
