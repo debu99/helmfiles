@@ -55,9 +55,9 @@ releases:
         envValueFrom:
           GF_DATABASE_USER:
             secretKeyRef:
-              name: mysql-secret
-              key: app-username
+              name: grafana-secret
+              key: db_username
           GF_DATABASE_PASSWORD:
             secretKeyRef:
-              name: mysql-secret
-              key: mysql-password
+              name: grafana-secret
+              key: db_password
