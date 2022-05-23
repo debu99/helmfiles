@@ -37,6 +37,7 @@ releases:
       - auth:
           username: "app_user"
           existingSecret: mysql-secret
+          database: grafana
   - name: grafana
     chart: grafana/grafana
     version: 6.29.4
