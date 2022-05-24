@@ -34,7 +34,7 @@ releases:
           server: "http://vault.vault.svc:8200"
           role: external-secrets
           grafana_path: kv/grafana/config
-          mysql_path: kv/grafana/config
+          mysql_path: kv/mysql/config
     wait: true
   - name: mysql
     chart: bitnami/mysql
