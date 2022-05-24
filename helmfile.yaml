@@ -23,6 +23,7 @@ releases:
   - name: secrets
     chart: ./secrets/externalsecrets/
     namespace: external-secrets
+    needs: ['external-secrets']
     values:
       - namespace: external-secrets
         provider: vault
@@ -41,6 +42,7 @@ releases:
     version: 9.0.4
     namespace: db
     createNamespace: true
+    needs: ['external-secrets', 'secrets']
     hooks:
       - events: ["prepare"]
         showlogs: true
@@ -59,6 +61,7 @@ releases:
     version: 6.29.4
     namespace: monitoring
     createNamespace: true
+    needs: ['external-secrets', 'secrets']
     hooks:
       - events: ["prepare"]
         showlogs: true
