@@ -25,9 +25,16 @@ releases:
     namespace: external-secrets
     values:
       - namespace: external-secrets
-        aws_region: us-east-1
-        aws_access_key: {{ requiredEnv "AWS_ACCESS_KEY" }}
-        aws_secret_key: {{ requiredEnv "AWS_SECRET_KEY" }}
+        provider: vault
+        #aws:
+        #  aws_region: us-east-1
+        #  aws_access_key: {{ requiredEnv "AWS_ACCESS_KEY" }}
+        #  aws_secret_key: {{ requiredEnv "AWS_SECRET_KEY" }}
+        vault:
+          server: "http://vault.vault.svc:8200"
+          role: external-secrets
+          grafana_path: kv/grafana/config
+          mysql_path: kv/grafana/config
     wait: true
   - name: mysql
     chart: bitnami/mysql
