@@ -41,6 +41,11 @@ releases:
     version: 9.0.4
     namespace: db
     createNamespace: true
+    hooks:
+      - events: ["prepare"]
+        showlogs: true
+        command: "kubectl"
+        args: ["wait", "--for", "condition=Ready", "-n", "db", "--timeout=60s", "ExternalSecret/mysql-secret"]
     values:
       - auth:
           username: "app_user"
@@ -54,6 +59,11 @@ releases:
     version: 6.29.4
     namespace: monitoring
     createNamespace: true
+    hooks:
+      - events: ["prepare"]
+        showlogs: true
+        command: "kubectl"
+        args: ["wait", "--for", "condition=Ready", "-n", "monitoring", "--timeout=60s", "ExternalSecret/grafana-secret"]
     values:
       - admin:
           existingSecret: "grafana-secret"
